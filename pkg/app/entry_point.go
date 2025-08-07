@@ -35,6 +35,7 @@ type cliArgs struct {
 	Profile            bool
 	PrintDefaultConfig bool
 	PrintConfigDir     bool
+	PrintRepoDirOnExit bool
 	UseConfigDir       string
 	WorkTree           string
 	GitDir             string
@@ -165,6 +166,21 @@ func Start(buildInfo *BuildInfo, integrationTest integrationTypes.IntegrationTes
 	parsedGitArg := parseGitArg(cliArgs.GitArg)
 
 	Run(appConfig, common, appTypes.NewStartArgs(cliArgs.FilterPath, parsedGitArg, integrationTest))
+
+	if cliArgs.PrintRepoDirOnExit {
+		// List of recent repos is stored in `appConfig.GetAppState().RecentRepos`
+		// When the focused repo is set, either during startup, or when another repo is
+		// selected with the `<c-r>` menu `os.Chdir()` is called, with the repository as argument.
+		// So the process' cwd is always in sync, with the repository that is focused. Meaning we
+		// can use `os.Getwd()` to get the path of the repository, when the app exits.
+		cwd, err := os.Getwd()
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(cwd)
+	}
 }
 
 func parseCliArgsAndEnvVars() *cliArgs {
@@ -197,6 +213,9 @@ func parseCliArgsAndEnvVars() *cliArgs {
 	printConfigDir := false
 	flaggy.Bool(&printConfigDir, "cd", "print-config-dir", "Print the config directory")
 
+	printRepoDirOnExit := false
+	flaggy.Bool(&printRepoDirOnExit, "", "print-repo-dir-on-exit", "Print the directory of the focused repository to stdout when exiting")
+
 	useConfigDir := ""
 	flaggy.String(&useConfigDir, "ucd", "use-config-dir", "override default config directory with provided directory")
 
@@ -225,6 +244,7 @@ func parseCliArgsAndEnvVars() *cliArgs {
 		Profile:            profile,
 		PrintDefaultConfig: printDefaultConfig,
 		PrintConfigDir:     printConfigDir,
+		PrintRepoDirOnExit: printRepoDirOnExit,
 		UseConfigDir:       useConfigDir,
 		WorkTree:           workTree,
 		GitDir:             gitDir,
