@@ -338,6 +338,7 @@ func getBisectStatusText(bisectStatus BisectStatus, bisectInfo *git_commands.Bis
 	return ""
 }
 
+// TODO: if ignored in .git-blame-ignore-revs, the grey the commit out
 func displayCommit(
 	common *common.Common,
 	commit *models.Commit,

@@ -244,6 +244,13 @@ func (self *LocalCommitsController) GetKeybindings(opts types.KeybindingsOpts) [
 			Tooltip:     self.c.Tr.OpenLogMenuTooltip,
 			OpensMenu:   true,
 		},
+		{
+			Key:         opts.GetKey(opts.Config.Commits.AddCommitToBlameIgnoreRevsFile),
+			Handler:     self.addCommitToBlameIgnoreRevsFile,
+			Description: self.c.Tr.AddCommitToBlameIgnoreRevsFile,
+			Tooltip:     self.c.Tr.AddCommitToBlameIgnoreRevsFileTooltip,
+			OpensMenu:   false,
+		},
 	}
 
 	return bindings
