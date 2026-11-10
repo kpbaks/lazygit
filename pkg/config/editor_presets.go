@@ -109,6 +109,13 @@ func getPreset(shell string, osConfig *OSConfig, guessDefaultEditor func() strin
 			openDirInEditorTemplate:   "hx -- {{dir}}",
 			suspend:                   returnBool(true),
 		},
+		"mitos": {
+			editTemplate:              "ms -- {{filename}}",
+			editAtLineTemplate:        "ms -- {{filename}}:{{line}}",
+			editAtLineAndWaitTemplate: "ms -- {{filename}}:{{line}}",
+			openDirInEditorTemplate:   "ms -- {{dir}}",
+			suspend:                   returnBool(true),
+		},
 		"vscode": {
 			editTemplate:              "code --reuse-window -- {{filename}}",
 			editAtLineTemplate:        "code --reuse-window --goto -- {{filename}}:{{line}}",
